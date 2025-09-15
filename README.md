@@ -5,7 +5,7 @@
 1.2. Создайте учётную запись sys_temp.  
 1.3. Выполните запрос на получение списка пользователей в базе данных. (скриншот)  
 1.4. Дайте все права для пользователя sys_temp.   
-1.5. Выполните запрос на получение списка прав для пользователя sys_temp. (скриншот)  
+1.5. Выполним запрос для выдачи всех прав для пользователя sys_temp. (скриншот)  
 1.6. Переподключитесь к базе данных от имени sys_temp.
 Для смены типа аутентификации с sha2 используйте запрос: 
 ```sql
@@ -19,18 +19,46 @@ ALTER USER 'sys_test'@'localhost' IDENTIFIED WITH mysql_native_password BY 'pass
 ---
 
 #### Решение 1.
-1. База данных состоит из данных числовых, строковых, 
-2. Таблицы, из которых состоит база данных:
-ФИО сотрудника -	VARCHAR 	
-Оклад 	- MONEY 	
-Должность 	- VARCHAR 	
-Тип подразделения 	- VARCHAR 	
-Структурное подразделение -VARCHAR 	
-Дата найма 	- DATE 	
-Адрес филиала 	- VARCHAR 	
-Проект, на который назначен - VARCHAR 	
-3. [файл в формате Excel](files/hw-12-1.xlsx)
+1.1. Запустим MYSQL в контейнере Docker.    
+`~$ docker run --name test-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret -d mysql:latest`   
+Dbeaver не соединяется - "Public Key Retrieval is not allowed". Исправим во вкладке Driver Properties параметр "allowPublicKeyRetrieval" на значение "true".    
+<img src = "img/1-1.png" width = 60%>     
+1.2. Откроем SQL-скрипт.    
+<img src = "img/1-2-1.png" width = 60%>  
+С помощью SQ-команды создадим пользователя.    
+`CREATE USER 'sys_temp'@'%' IDENTIFIED BY 'password';`  Вместо localhost  используем `%`, так как был конфликт при смене аутентификации (localhost root  и sys_temp имели разные ip). В работе этот вариант небезопасен, но для решения подойдет.  
+<img src = "img/1-2-2.png" width = 60%>      
+1.3 Выполним запрос для вывода всех пользователей.      
+`SELECT user FROM mysql.user;`  
+<img src = "img/1-3-1.png" width = 60%>    
+<img src = "img/1-3-2.png" width = 60%>   
+1.4 Выполним запрос для выдачи всех прав для пользователя sys_temp.   
+`GRANT ALL PRIVILEGES ON *.* TO 'sys_temp'@'%';`  
+<img src = "img/1-4.png" width = 60%>  
+1.5 Выполним запрос для просмотра прав для пользователя sys_temp.   
+`SHOW GRANTS FOR 'sys_temp'@'%';`  
+<img src = "img/1-5.png" width = 60%>  
+1.6 Переподключимся к базе данных от имени sys_temp и проверим.  
+`SELECT USER(), CURRENT_USER();`  
+<img src = "img/1-5.png" width = 60%>    
+1.7 Скачать дамп базы данных посредством dbeaver не получилось, так как local client не cмог найти mysql 
+в докере. Поэтому пришлось заталкивать дамп базы из хоста в докер, а затем загружать в mysql.  
+`docker cp /home/yury/HW/SQL/DDL-DML/files/sakila-schema.sql  747aebd89200:/tmp/sakila-schema.sql  
+ docker exec -it 747aebd89200 ls -la /tmp/  
+ docker exec -it 747aebd89200 mysql -u sys_temp -p -e "CREATE DATABASE IF NOT EXISTS sakila;"  
+ docker exec -it 747aebd89200 bash -c "mysql -u sys_temp -ppassword sakila < /tmp/dump.sql"`  
+<img src = "img/1-7.png" width = 60%>   
+1.8 Сформируем ER-диаграмму и, используя команду, выведем все таблицы базы данных.  
+<img src = "img/1-8-1.png" width = 60%>  
+`SHOW TABLES FROM sakila;`  
+<img src = "img/1-8-2.png" width = 60%>  
+Также загрузим данные.  
+`docker cp /home/yury/HW/SQL/DDL-DML/files/sakila-data.sql 747aebd89200:/tmp/data.sql
+docker cp /home/yury/HW/SQL/DDL-DML/files/sakila-data.sql 747aebd89200:/tmp/data.sql`
+<img src = "img/1-8-2-2.png" width = 60%>   
 
+Простыня со всеми запросами.  
+<img src = "img/1-8-3.png" width = 60%>  
 ---
 
 
