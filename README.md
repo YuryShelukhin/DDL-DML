@@ -71,17 +71,26 @@ customer         | customer_id
 ---
 
 #### Решение 2.
-1. База данных состоит из данных числовых, строковых, 
-2. Таблицы, из которых состоит база данных:
-ФИО сотрудника -	VARCHAR 	
-Оклад 	- MONEY 	
-Должность 	- VARCHAR 	
-Тип подразделения 	- VARCHAR 	
-Структурное подразделение -VARCHAR 	
-Дата найма 	- DATE 	
-Адрес филиала 	- VARCHAR 	
-Проект, на который назначен - VARCHAR 	
-3. [файл в формате Excel](files/hw-12-1.xlsx)
+Получить данные можно визуальным изучением таблиц  
+<img src = "img/2-1.png" width = 60%>   
+<img src = "img/2-2.png" width = 60%>   
+или с помощью sql-скрипта  
+`SELECT 
+    t.TABLE_NAME,
+    k.COLUMN_NAME AS PRIMARY_KEY,
+    k.CONSTRAINT_NAME
+FROM information_schema.TABLES t
+LEFT JOIN information_schema.KEY_COLUMN_USAGE k 
+    ON t.TABLE_SCHEMA = k.TABLE_SCHEMA 
+    AND t.TABLE_NAME = k.TABLE_NAME 
+    AND k.CONSTRAINT_NAME = 'PRIMARY'
+WHERE t.TABLE_SCHEMA = 'sakila'
+    AND t.TABLE_TYPE = 'BASE TABLE'
+ORDER BY t.TABLE_NAME;`  
+<img src = "img/2-3.png" width = 60%>
+
+[файл в формате Excel](files/task_2.ods)
+---
 
 
 ## Дополнительные задания (со звёздочкой*)
