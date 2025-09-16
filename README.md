@@ -98,56 +98,24 @@ ORDER BY t.TABLE_NAME;`
 
 ### Задание 3*
 3.1. Уберите у пользователя sys_temp права на внесение, изменение и удаление данных из базы sakila.
-
 3.2. Выполните запрос на получение списка прав для пользователя sys_temp. (скриншот)
 
 *Результатом работы должны быть скриншоты обозначенных заданий, а также простыня со всеми запросами.*
 ---
 
-
 #### Решение 3*.
-1. База данных состоит из данных числовых, строковых, 
-2. Таблицы, из которых состоит база данных:
-ФИО сотрудника -	VARCHAR 	
-Оклад 	- MONEY 	
-Должность 	- VARCHAR 	
-Тип подразделения 	- VARCHAR 	
-Структурное подразделение -VARCHAR 	
-Дата найма 	- DATE 	
-Адрес филиала 	- VARCHAR 	
-Проект, на который назначен - VARCHAR 	
-3. [файл в формате Excel](files/hw-12-1.xlsx)
+Выдадим все права.    
+`GRANT ALL PRIVILEGES ON sakila.* TO 'sys_temp'@'%';`    
+Исключим права на модификацию.    
+`REVOKE INSERT, UPDATE, DELETE ON sakila.* FROM 'sys_temp'@'%';`  
+Применим изменения.    
+`FLUSH PRIVILEGES;`  
+Проверим права.  
+`SHOW GRANTS FOR 'sys_temp'@'%';`  
+<img src = "img/3-1.png" width = 60%>  
+
 ---
 
 
 
 
-
-
-### Для себя. Работа с DBeaver.
-Для себя:
-`docker run --name pg-test -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres:latest`  
-Установим Python версии 3 и библиотеку Pika.   
-<img src = "img/01.png" width = 60%> 
-<img src = "img/02.png" width = 60%> 
-<img src = "img/03.png" width = 60%>
-<img src = "img/04.png" width = 60%> 
-<img src = "img/05.png" width = 60%> 
-<img src = "img/1.png" width = 60%> 
-<img src = "img/2.png" width = 60%> 
-<img src = "img/3.png" width = 60%>
-<img src = "img/4.png" width = 60%> 
-<img src = "img/5.png" width = 60%> 
-<img src = "img/6.png" width = 60%>
-<img src = "img/7.png" width = 60%> 
-<img src = "img/8.png" width = 60%> 
-<img src = "img/9.png" width = 60%>
-<img src = "img/10.png" width = 60%>
-<img src = "img/11.png" width = 60%> 
-<img src = "img/12.png" width = 60%> 
-<img src = "img/13.png" width = 60%>
-<img src = "img/15.png" width = 60%> 
-<img src = "img/14.png" width = 60%>
-<img src = "img/16.png" width = 60%>
-<img src = "img/17.png" width = 60%>
----
